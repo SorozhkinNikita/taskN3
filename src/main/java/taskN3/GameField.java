@@ -12,7 +12,7 @@ import java.util.Random;
 public class GameField extends JPanel implements ActionListener {
     private final int WIDTH = 800;
     private final int PC_Y = 465;
-    private final int ALL_SOFTWARES = 7;
+    private final int ALL_SOFTWARES = 8;
     private int delay;
     private int score;
     private LinkedList<Integer> queue = new LinkedList<>();
@@ -63,7 +63,7 @@ public class GameField extends JPanel implements ActionListener {
         pc = iipc.getImage();
         ImageIcon iie = new ImageIcon("images/end_game.png");
         endGame = iie.getImage();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < ALL_SOFTWARES; i++) {
             ImageIcon iip = new ImageIcon("images/p" + i + ".png");
             images[i] = iip.getImage();
         }
@@ -87,10 +87,14 @@ public class GameField extends JPanel implements ActionListener {
     //при вызове происходит проверка на пустоту очереди, так что ошибки быть не может быть
     private void caught() {
         int PC_WIDTH = 100;
-        if (softwareY[queue.peekFirst()] >= PC_Y- PC_WIDTH /2) {
-            int PC_HEIGHT = 108;
-            if (softwareX[queue.peekFirst()] > pcX - PC_HEIGHT / 2 &&
-                    softwareX[queue.peekFirst()] < pcX + PC_HEIGHT * 1.5) {
+        int PC_HEIGHT = 108;
+        Integer elem = queue.peekFirst();
+        int VIRUS_NUM = 7;
+        boolean isVirus = elem.equals(VIRUS_NUM);
+        boolean inRange = softwareX[elem] > pcX - PC_HEIGHT / 2 &&
+                softwareX[elem] < pcX + PC_HEIGHT * 1.5;
+        if (softwareY[elem] >= PC_Y- PC_WIDTH /2) {
+            if (inRange && !isVirus || !inRange && isVirus) {
                 onDesk[queue.pollFirst()] = false;
                 score++;
             } else {
